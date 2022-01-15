@@ -2,12 +2,12 @@
 
 _Tree operation_
 
-![](img/tree-screenshot 2022-01-15 at 8.03.23 PM.png)
+![img.png](img.png)
 
 _Stack operation_
 
-![](img/stack-screenshot 2022-01-15 at 8.04.01 PM.png)
+![img_1.png](img_1.png)
 
 _Queue operation_
 
-![](img/queue-screenshot 2022-01-15 at 8.02.05 PM.png)
+![img_2.png](img_2.png)
