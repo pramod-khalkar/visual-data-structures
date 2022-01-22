@@ -1,6 +1,6 @@
 package data.structures.queue;
 
-import data.structures.ArrayStorage;
+import data.structures.Algorithm;
 
 /**
  * Date: 31/12/21
@@ -8,17 +8,14 @@ import data.structures.ArrayStorage;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public class QueueImpl<T> extends ArrayStorage<T> implements Queue<T> {
-    private int front, rear;
+public class SimpleQueue<T> extends PrintableQueue<T> implements Queue<T>, Algorithm {
 
-    public QueueImpl() {
+    public SimpleQueue() {
         this(10);
     }
 
-    public QueueImpl(int capacity) {
+    public SimpleQueue(int capacity) {
         super(capacity);
-        this.front = -1;
-        this.rear = -1;
     }
 
     @Override
@@ -66,8 +63,7 @@ public class QueueImpl<T> extends ArrayStorage<T> implements Queue<T> {
     }
 
     @Override
-    public void print() {
-        QueuePrinter<T> queuePrinter = new QueuePrinter<>(this, this.storageArray, this.rear, this.front);
-        queuePrinter.print();
+    public void clear() {
+        reInitStorage();
     }
 }

@@ -1,8 +1,7 @@
 package data.structures.tree;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Date: 05/01/22
@@ -10,41 +9,45 @@ import java.util.Objects;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public abstract class AbstractTree<T> extends TreePrinter<Node<T>> implements Tree<T> {
-    protected Node<T> root;
+public abstract class AbstractTree<T> implements Tree<T> {
+    private Node<T> root;
 
     protected AbstractTree() {
         this.root = null;
     }
 
     @Override
+    public boolean isEmpty() {
+        return getRootNode() == null;
+    }
+
     protected Node<T> getRootNode() {
         return this.root;
     }
 
+    protected void setRootNode(Node<T> root) {
+        this.root = root;
+    }
+
     @Override
-    public boolean search(T value) {
+    public Optional<Node<T>> search(T value) {
         Objects.requireNonNull(value);
-        return false;
+        return Optional.empty();
     }
 
     @Override
-    public void insert(T value) {
+    public Node<T> insert(T value) {
+        Objects.requireNonNull(value);
+        return new Node<>(value);
+    }
+
+    @Override
+    public void remove(T value) {
         Objects.requireNonNull(value);
     }
 
     @Override
-    public void delete(T value) {
-        Objects.requireNonNull(value);
-    }
-
-    @Override
-    public List<T> traverseAndCollect() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void traverseAndPrint() {
-        print();
+    public void removeAll() {
+        setRootNode(null);
     }
 }

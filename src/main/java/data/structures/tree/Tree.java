@@ -1,6 +1,6 @@
 package data.structures.tree;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * Date: 01/01/22
@@ -10,13 +10,13 @@ import java.util.List;
  */
 public interface Tree<T> {
 
-    boolean search(T value);
+    Optional<Node<T>> search(T value);
 
-    void insert(T value);
+    Node<T> insert(T value);
 
-    void delete(T value);
+    void remove(T value);
 
-    List<T> traverseAndCollect();
+    void removeAll();
 
-    void traverseAndPrint();
+    boolean isEmpty();
 }

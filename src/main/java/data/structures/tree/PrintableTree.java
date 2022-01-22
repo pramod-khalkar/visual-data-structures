@@ -1,9 +1,10 @@
 package data.structures.tree;
 
+import data.structures.Printable;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import data.structures.Printable;
 
 /**
  * Date: 05/01/22
@@ -11,34 +12,32 @@ import data.structures.Printable;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public abstract class TreePrinter<T extends Node<?>> implements Printable {
+public abstract class PrintableTree<T> extends AbstractTree<T> implements Printable {
 
-    protected abstract T getRootNode();
-
-    protected abstract Type getTreeType();
+    protected abstract Type getTypeOfTree();
 
     @Override
-    public void print() {
-        T root = getRootNode();
+    public void printOn(PrintStream outputStream) {
+        Node<T> root = getRootNode();
         if (root != null) {
-            if (getTreeType() == Type.N_ARRAY) {
-                printNArrayTree("      ", root, getChildrenFunc(getTreeType()), false);
+            if (getTypeOfTree() == Type.N_ARRAY) {
+                printNArrayTree("      ", root, getChildrenFunc(getTypeOfTree()), false, outputStream);
             } else {
-                printBinaryTree(getRootNode());
+                printBinaryTree(getRootNode(), outputStream);
             }
         }
     }
 
-    private Function<T, List<T>> getChildrenFunc(Type type) {
+    private Function<Node<T>, List<Node<T>>> getChildrenFunc(Type type) {
         switch (type) {
             case N_ARRAY:
                 return (node -> {
-                    List<T> childs = new ArrayList<>();
+                    List<Node<T>> childs = new ArrayList<>();
                     if (node.getLeft() != null) {
-                        T child = (T) node.getLeft();
+                        Node<T> child = node.getLeft();
                         while (child != null) {
                             childs.add(child);
-                            child = (T) child.getRight();
+                            child = child.getRight();
                         }
                     }
                     return childs;
@@ -46,12 +45,12 @@ public abstract class TreePrinter<T extends Node<?>> implements Printable {
             case BINARY:
             default:
                 return (node -> {
-                    List<T> childs = new ArrayList<>();
+                    List<Node<T>> childs = new ArrayList<>();
                     if (node.getLeft() != null) {
-                        childs.add((T) node.getLeft());
+                        childs.add(node.getLeft());
                     }
                     if (node.getRight() != null) {
-                        childs.add((T) node.getRight());
+                        childs.add(node.getRight());
                     }
                     return childs;
                 });
@@ -59,22 +58,25 @@ public abstract class TreePrinter<T extends Node<?>> implements Printable {
     }
 
 
-    private void printNArrayTree(String prefix, T node, Function<T, List<T>> getChildrenFunc, boolean isTail) {
+    private void printNArrayTree(String prefix, Node<T> node,
+                                 Function<Node<T>, List<Node<T>>> getChildrenFunc,
+                                 boolean isTail,
+                                 PrintStream outputStream) {
         String nodeName = node.toString();
         String nodeConnection = isTail ? "└── " : "├── ";
-        System.out.println(prefix + nodeConnection + nodeName);
-        List<T> children = getChildrenFunc.apply(node);
+        outputStream.println(prefix + nodeConnection + nodeName);
+        List<Node<T>> children = getChildrenFunc.apply(node);
         for (int i = 0; i < children.size(); i++) {
             String newPrefix = prefix + (isTail ? "    " : "│   ");
-            printNArrayTree(newPrefix, children.get(i), getChildrenFunc, i == children.size() - 1);
+            printNArrayTree(newPrefix, children.get(i), getChildrenFunc, i == children.size() - 1, outputStream);
         }
     }
 
-    private void printBinaryTree(T root) {
+    private void printBinaryTree(Node<T> root, PrintStream outputStream) {
         List<List<String>> lines = new ArrayList<>();
 
-        List<T> level = new ArrayList<T>();
-        List<T> next = new ArrayList<T>();
+        List<Node<T>> level = new ArrayList<>();
+        List<Node<T>> next = new ArrayList<>();
 
         level.add(root);
         int nn = 1;
@@ -86,20 +88,21 @@ public abstract class TreePrinter<T extends Node<?>> implements Printable {
 
             nn = 0;
 
-            for (T n : level) {
+            for (Node<T> n : level) {
                 if (n == null) {
                     line.add(null);
                     next.add(null);
                     next.add(null);
                 } else {
-                    String aa = n.getData().toString();
+                    // Actual node value goes here
+                    String aa = n.toString();
                     line.add(aa);
                     if (aa.length() > widest) {
                         widest = aa.length();
                     }
 
-                    next.add((T) n.getLeft());
-                    next.add((T) n.getRight());
+                    next.add(n.getLeft());
+                    next.add(n.getRight());
 
                     if (n.getLeft() != null) {
                         nn++;
@@ -116,7 +119,7 @@ public abstract class TreePrinter<T extends Node<?>> implements Printable {
 
             lines.add(line);
 
-            List<T> tmp = level;
+            List<Node<T>> tmp = level;
             level = next;
             next = tmp;
             next.clear();
@@ -141,25 +144,25 @@ public abstract class TreePrinter<T extends Node<?>> implements Printable {
                             }
                         }
                     }
-                    System.out.print(c);
+                    outputStream.print(c);
 
                     // lines and spaces
                     if (line.get(j) == null) {
                         for (int k = 0; k < perpiece - 1; k++) {
-                            System.out.print(" ");
+                            outputStream.print(" ");
                         }
                     } else {
 
                         for (int k = 0; k < hpw; k++) {
-                            System.out.print(j % 2 == 0 ? " " : "─");
+                            outputStream.print(j % 2 == 0 ? " " : "─");
                         }
-                        System.out.print(j % 2 == 0 ? "┌" : "┐");
+                        outputStream.print(j % 2 == 0 ? "┌" : "┐");
                         for (int k = 0; k < hpw; k++) {
-                            System.out.print(j % 2 == 0 ? "─" : " ");
+                            outputStream.print(j % 2 == 0 ? "─" : " ");
                         }
                     }
                 }
-                System.out.println();
+                outputStream.println();
             }
 
             // print line of numbers
@@ -174,14 +177,14 @@ public abstract class TreePrinter<T extends Node<?>> implements Printable {
 
                 // a number
                 for (int k = 0; k < gap1; k++) {
-                    System.out.print(" ");
+                    outputStream.print(" ");
                 }
-                System.out.print(f);
+                outputStream.print(f);
                 for (int k = 0; k < gap2; k++) {
-                    System.out.print(" ");
+                    outputStream.print(" ");
                 }
             }
-            System.out.println();
+            outputStream.println();
 
             perpiece /= 2;
         }

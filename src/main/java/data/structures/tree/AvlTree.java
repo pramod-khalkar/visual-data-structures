@@ -1,6 +1,7 @@
 package data.structures.tree;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Date: 05/01/22
@@ -8,29 +9,31 @@ import java.util.Objects;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public class AvlTree<T extends Comparable<T>> extends BinarySearchTree<T> {
+public class AvlTree<T extends Comparable<? super T>> extends BSTree<T> {
 
     public AvlTree() {
         super();
     }
 
     @Override
-    public void insert(T value) {
+    public Node<T> insert(T value) {
         Objects.requireNonNull(value);
-        this.root = insert0((AvlNode<T>) getRootNode(), value);
+        AvlNode<T> newNode = new AvlNode<>(value);
+        setRootNode(insert0((AvlNode<T>) getRootNode(), newNode));
+        return newNode;
     }
 
-    AvlNode<T> insert0(AvlNode<T> root, T value) {
-        if (root == null) {
-            return new AvlNode<>(value);
-        } else if (root.getData().compareTo(value) > 0) {
-            root.setLeft(insert0((AvlNode<T>) root.getLeft(), value));
-        } else if (root.getData().compareTo(value) < 0) {
-            root.setRight(insert0((AvlNode<T>) root.getRight(), value));
+    AvlNode<T> insert0(AvlNode<T> tNode, AvlNode<T> newNode) {
+        if (tNode == null) {
+            return newNode;
+        } else if (tNode.getData().compareTo(newNode.getData()) > 0) {
+            tNode.setLeft(insert0((AvlNode<T>) tNode.getLeft(), newNode));
+        } else if (tNode.getData().compareTo(newNode.getData()) < 0) {
+            tNode.setRight(insert0((AvlNode<T>) tNode.getRight(), newNode));
         } else {
-            throw new RuntimeException(String.format("Duplicate value %s", value));
+            throw new RuntimeException(String.format("Duplicate value %s", newNode.getData()));
         }
-        return reBalance(root);
+        return reBalance(tNode);
     }
 
     private AvlNode<T> reBalance(AvlNode<T> z) {
@@ -58,12 +61,12 @@ public class AvlTree<T extends Comparable<T>> extends BinarySearchTree<T> {
         return heightOf(node.getLeft()) - heightOf(node.getRight());
     }
 
-    protected <E> int heightOf(Node<E> node) {
+    protected <E> int heightOf(Node<E> tNode) {
         int height = 0;
-        if (node == null) {
+        if (tNode == null) {
             height = -1;
         } else {
-            height = Math.max(heightOf(node.getLeft()), heightOf(node.getRight())) + 1;
+            height = Math.max(heightOf(tNode.getLeft()), heightOf(tNode.getRight())) + 1;
         }
         return height;
     }
@@ -89,13 +92,13 @@ public class AvlTree<T extends Comparable<T>> extends BinarySearchTree<T> {
     }
 
     @Override
-    public void delete(T value) {
-        super.delete(value);
+    public void remove(T value) {
+        super.remove(value);
         reBalance((AvlNode<T>) getRootNode());
     }
 
     @Override
-    public boolean search(T value) {
+    public Optional<Node<T>> search(T value) {
         return super.search(value);
     }
 
@@ -120,6 +123,11 @@ public class AvlTree<T extends Comparable<T>> extends BinarySearchTree<T> {
 
         public void updateHeight() {
             this.height = heightOf(this);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + String.format("(bf:%d)", getBalanceFactor());
         }
     }
 }

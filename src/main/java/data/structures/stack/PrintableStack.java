@@ -1,6 +1,8 @@
 package data.structures.stack;
 
+import data.structures.ArrayStorage;
 import data.structures.Printable;
+import java.io.PrintStream;
 
 /**
  * Date: 14/01/22
@@ -8,40 +10,38 @@ import data.structures.Printable;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public class StackPrinter<T> implements Printable {
+public abstract class PrintableStack<T> extends ArrayStorage<T> implements Printable {
 
-    private final T[] storageArray;
-
-    public StackPrinter(T[] storageArray) {
-        this.storageArray = storageArray;
+    public PrintableStack(int capacity) {
+        super(capacity);
     }
 
     @Override
-    public void print() {
+    public void printOn(PrintStream outputStream) {
         int maxLength = maxLength();
         int width = 5 + maxLength;
         int firstHalfWidth = width / 2;
         int secondHalfWidth = firstHalfWidth + (width % 2);
         for (int i = this.storageArray.length - 1; i >= 0; i--) {
             if (this.storageArray[i] != null) {
-                System.out.println();
-                System.out.print("|");
-                insertCharacter(' ', firstHalfWidth);
-                System.out.printf("%" + maxLength + "s", this.storageArray[i]);
-                insertCharacter(' ', secondHalfWidth);
-                System.out.print("|");
+                outputStream.println();
+                outputStream.print("|");
+                insertCharacter(' ', firstHalfWidth, outputStream);
+                outputStream.printf("%" + maxLength + "s", this.storageArray[i]);
+                insertCharacter(' ', secondHalfWidth, outputStream);
+                outputStream.print("|");
 
-                System.out.println();
-                System.out.print("└");
-                insertCharacter('─', (width + maxLength));
-                System.out.print("┘");
+                outputStream.println();
+                outputStream.print("└");
+                insertCharacter('─', (width + maxLength), outputStream);
+                outputStream.print("┘");
             }
         }
     }
 
-    private void insertCharacter(char value, int noOfSpaces) {
+    private void insertCharacter(char value, int noOfSpaces, PrintStream outputStream) {
         for (int i = 0; i < noOfSpaces; i++) {
-            System.out.print(value);
+            outputStream.print(value);
         }
     }
 

@@ -1,6 +1,6 @@
 package data;
 
-import data.structures.gui.GUIMainWindow;
+import data.gui.MainWindow;
 import java.io.IOException;
 
 /**
@@ -12,6 +12,6 @@ import java.io.IOException;
 public class ApplicationLancher {
 
     public static void main(String[] args) throws IOException {
-        new GUIMainWindow(800, 500);
+        MainWindow main = new MainWindow(800, 500);
     }
 }

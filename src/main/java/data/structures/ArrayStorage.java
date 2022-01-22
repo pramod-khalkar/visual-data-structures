@@ -15,4 +15,9 @@ public abstract class ArrayStorage<T> {
         this.capacity = capacity;
         this.storageArray = (T[]) new Object[this.capacity];
     }
+
+    protected void reInitStorage() {
+        this.index = 0;
+        this.storageArray = (T[]) new Object[this.capacity];
+    }
 }

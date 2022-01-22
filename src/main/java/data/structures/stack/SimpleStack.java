@@ -1,6 +1,6 @@
 package data.structures.stack;
 
-import data.structures.ArrayStorage;
+import data.structures.Algorithm;
 
 /**
  * Date: 31/12/21
@@ -8,13 +8,13 @@ import data.structures.ArrayStorage;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public class StackImpl<T> extends ArrayStorage<T> implements Stack<T> {
+public class SimpleStack<T> extends PrintableStack<T> implements Stack<T>, Algorithm {
 
-    public StackImpl() {
+    public SimpleStack() {
         this(10);
     }
 
-    public StackImpl(int capacity) {
+    public SimpleStack(int capacity) {
         super(capacity);
     }
 
@@ -39,8 +39,7 @@ public class StackImpl<T> extends ArrayStorage<T> implements Stack<T> {
     }
 
     @Override
-    public void print() {
-        StackPrinter<T> printer = new StackPrinter<>(this.storageArray);
-        printer.print();
+    public void clear() {
+        reInitStorage();
     }
 }

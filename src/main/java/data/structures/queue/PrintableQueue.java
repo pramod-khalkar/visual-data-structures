@@ -1,6 +1,7 @@
 package data.structures.queue;
 
 import data.structures.Printable;
+import java.io.PrintStream;
 
 /**
  * Date: 14/01/22
@@ -8,26 +9,19 @@ import data.structures.Printable;
  * This file is project specific to visual-data-structures
  * Author: Pramod Khalkar
  */
-public class QueuePrinter<T> implements Printable {
+public abstract class PrintableQueue<T> extends AbstractQueue<T> implements Printable {
 
-    private final T[] arr;
-    private final int rear, front;
-    private final Queue<T> queue;
-
-    public QueuePrinter(Queue<T> queue, T[] arr, int rear, int front) {
-        this.arr = arr;
-        this.rear = rear;
-        this.front = front;
-        this.queue = queue;
+    public PrintableQueue(int capacity) {
+        super(capacity);
     }
 
     @Override
-    public void print() {
-        int maxWordWidth = findMaxWidth(this.arr);
+    public void printOn(PrintStream outputStream) {
+        int maxWordWidth = findMaxWidth(this.storageArray);
         int maxWidth = 5 + maxWordWidth;
         int firstHalfWidth = (maxWidth - maxWordWidth) / 2;
         int secondHalfWidth = firstHalfWidth + ((maxWidth - maxWordWidth) % 2);
-        if (!queue.isEmpty()) {
+        if (this.front != -1) {
             String line1 = "┍" + insertCharacter('-', maxWidth) + "┑";//"+--------------+";
             String line2 = "|" + insertCharacter(' ', firstHalfWidth)
                     + "%" + maxWordWidth + "s"
@@ -39,7 +33,7 @@ public class QueuePrinter<T> implements Printable {
 
             for (int i = this.rear; i >= this.front; i--) {
                 upperBorder.append(line1);
-                midleBorder.append(String.format(line2, this.arr[i]));
+                midleBorder.append(String.format(line2, this.storageArray[i]));
                 lowerBorder.append(line3);
             }
             upperBorder.insert(0, "         ");
@@ -49,9 +43,9 @@ public class QueuePrinter<T> implements Printable {
             midleBorder.append(" REAR-->>");
             lowerBorder.append("         ");
 
-            System.out.println(upperBorder);
-            System.out.println(midleBorder);
-            System.out.println(lowerBorder);
+            outputStream.println(upperBorder);
+            outputStream.println(midleBorder);
+            outputStream.println(lowerBorder);
         }
     }
 

@@ -1,4 +1,4 @@
-package data.structures.gui;
+package data.gui;
 
 import java.io.PrintStream;
 import javax.swing.JTextArea;

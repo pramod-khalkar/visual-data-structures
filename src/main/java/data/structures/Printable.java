@@ -1,5 +1,7 @@
 package data.structures;
 
+import java.io.PrintStream;
+
 /**
  * Date: 04/01/22
  * Time: 11:22 pm
@@ -7,5 +9,5 @@ package data.structures;
  * Author: Pramod Khalkar
  */
 public interface Printable {
-    void print();
+    void printOn(PrintStream outputStream);
 }
