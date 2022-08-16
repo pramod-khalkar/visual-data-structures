@@ -1,6 +1,8 @@
 package data.utils;
 
+import java.util.Random;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 /**
  * Date: 31/12/21
@@ -21,5 +23,17 @@ public final class Helper {
             return false;
         }
         return NUM_CHECK_PATTERN.matcher(strNum).find();
+    }
+
+    public static String[] randomNumbers(int limit) {
+        Random random = new Random();
+        return IntStream.range(0, limit)
+                .map(i -> random.nextInt(100))
+                .distinct()
+                .mapToObj(String::valueOf).toArray(String[]::new);
+    }
+
+    public static String[] randomNumbers() {
+        return randomNumbers(15);
     }
 }

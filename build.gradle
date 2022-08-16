@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.github.vlsi.mxgraph:jgraphx:4.2.2'
+    implementation files('/Users/pramod/Documents/workspace/java/java-ds/build/libs/javads-0.0.1.jar')
     implementation 'com.google.code.gson:gson:2.8.9'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
@@ -18,3 +20,8 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+/*
+compileJava {
+    options.encoding 'UTF-8'
+}*/
