@@ -1,7 +1,6 @@
 package data;
 
-import data.gui.MainWindow;
-import java.io.IOException;
+import data.gui.LauncherWindow;
 
 /**
  * Date: 31/12/21
@@ -11,7 +10,8 @@ import java.io.IOException;
  */
 public class ApplicationLancher {
 
-    public static void main(String[] args) throws IOException {
-        MainWindow main = new MainWindow(800, 500);
+    public static void main(String[] args) {
+        LauncherWindow window = new LauncherWindow();
+        window.launch();
     }
 }
