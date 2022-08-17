@@ -1,9 +1,11 @@
 package data.gui;
 
+import data.utils.Helper;
 import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -49,47 +51,59 @@ public class LauncherWindow extends JFrame implements ActionListener {
     }
 
     private void setMenuBar() {
-        dataStruct = new JMenu("Data Structure");
+        dataStruct = new JMenu("Data Structures");
+        dataStruct.setIcon(new ImageIcon(Helper.loadImageIcon("images/ds.png")));
         stackMItem = new JMenuItem("Stack");
+        stackMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/stack.png")));
         stackMItem.addActionListener(this);
         dataStruct.add(stackMItem);
 
         queueMItem = new JMenuItem("Queue");
+        queueMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/queue.png")));
         queueMItem.addActionListener(this);
         dataStruct.add(queueMItem);
 
         treeMenu = new JMenu("Tree");
+        treeMenu.setIcon(new ImageIcon(Helper.loadImageIcon("images/tree.png")));
         dataStruct.add(treeMenu);
 
         avlTreeMItem = new JMenuItem("AVL Tree");
+        avlTreeMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         avlTreeMItem.addActionListener(this);
         treeMenu.add(avlTreeMItem);
 
-        bsTreeMItem = new JMenuItem("BS Tree");
+        bsTreeMItem = new JMenuItem("Binary Search Tree");
+        bsTreeMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         bsTreeMItem.addActionListener(this);
         treeMenu.add(bsTreeMItem);
 
-        genTreeMItem = new JMenuItem("General Tree");
+        genTreeMItem = new JMenuItem("General Binary Tree");
+        genTreeMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         genTreeMItem.addActionListener(this);
         treeMenu.add(genTreeMItem);
 
         genNTreeMItem = new JMenuItem("General Nary Tree");
+        genNTreeMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         genNTreeMItem.addActionListener(this);
         treeMenu.add(genNTreeMItem);
 
         redTreeMItem = new JMenuItem("Red Black Tree");
+        redTreeMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         redTreeMItem.addActionListener(this);
         treeMenu.add(redTreeMItem);
 
         treapMItem = new JMenuItem("Treap");
+        treapMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         treapMItem.addActionListener(this);
         treeMenu.add(treapMItem);
 
         splayTreeMItem = new JMenuItem("Splay Tree");
+        splayTreeMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
         splayTreeMItem.addActionListener(this);
         treeMenu.add(splayTreeMItem);
 
         graphMenu = new JMenu("Graph");
+        graphMenu.setIcon(new ImageIcon(Helper.loadImageIcon("images/graph.png")));
         dataStruct.add(graphMenu);
 
         mb = new JMenuBar();
@@ -101,11 +115,11 @@ public class LauncherWindow extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             add("stack", stackWindow);
             add("queue", queueWindow);
-            add("avl", new TreeViewer("Avl Tree", new AvlTree<>()));
+            add("avl", new TreeViewer("AVL Tree", new AvlTree<>()));
             add("bst", new TreeViewer("Binary Search Tree", new BSTree<>()));
-            add("gen", new TreeViewer("Simple Binary Tree", new GeneralBinaryTree<>()));
-            add("gen-n-arr", new TreeViewer("General Nary Tree", new GeneralNaryTree<>()));
-            add("treap", new TreeViewer("Treap", new Treap<>()));
+            add("gen", new GeneralTreeViewer("General Binary Tree", new GeneralBinaryTree<>()));
+            add("gen-n-arr", new GeneralNaryTreeViewer("General Nary Tree", new GeneralNaryTree<>()));
+            add("treap", new TreapTreeViewer("Treap", new Treap<>()));
             add("splay", new TreeViewer("Splay Tree", new SplayTree<>()));
             add("rb", new TreeViewer("Red Black Tree", new RedBlackTree<>()));
         });

@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.javads.tree.Node;
+import org.javads.tree.RedBlackTree;
 import org.javads.tree.Tree;
 
 /**
@@ -21,26 +22,26 @@ import org.javads.tree.Tree;
  **/
 public class TreeViewer extends AbstractPanel implements TreeEvent {
 
-    private final Tree<String> tree;
-    private final TreeComponentPanel<String> treeComponentPanel;
+    protected final Tree<Long> tree;
+    protected final TreeComponentPanel<Long> treeComponentPanel;
 
-    public TreeViewer(String header, Tree<String> tree) {
+    public TreeViewer(String header, Tree<Long> tree) {
         super(header);
         this.tree = tree;
-        this.tree.insert(Helper.randomNumbers());
+        this.tree.insert(Helper.randomNumbers(10));
         treeComponentPanel = new TreeComponentPanel<>(tree.getRootNode(), this);
         add(treeComponentPanel);
     }
 
     @Override
     public void add() {
-        tree.insert((String) receiveInput());
+        tree.insert(acceptInputInLong());
         this.treeComponentPanel.update(tree.getRootNode());
     }
 
     @Override
     public void remove() {
-        tree.remove((String) receiveInput());
+        tree.remove(acceptInputInLong());
         this.treeComponentPanel.update(tree.getRootNode());
     }
 
@@ -53,8 +54,9 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
     static class TreeComponentPanel<T extends Comparable<T>> extends JPanel {
         static private int CANVAS_WIDTH = 1000;
         private int rootY = 10;
-        private int NODE_SIZE = 25;
-        private int ROW_HEIGHT = 50;
+        private int NODE_SIZE_WIDTH = 55;
+        private int NODE_SIZE_HEIGHT = 25;
+        private int ROW_HEIGHT = 60;
         mxGraph graph = new mxGraph();
         Object parent = graph.getDefaultParent();
 
@@ -71,8 +73,8 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
                 return null;
             }
             int myX = (int) ((CANVAS_WIDTH * (index)) / (Math.pow(2, depth - 1) + 1));
-            Object rootVertex = graph.insertVertex(parent, null, root.getData(),
-                    myX, depth * ROW_HEIGHT + rootY, NODE_SIZE, NODE_SIZE);
+            Object rootVertex = graph.insertVertex(parent, null, root.toString(),
+                    myX, depth * ROW_HEIGHT + rootY, NODE_SIZE_WIDTH, NODE_SIZE_HEIGHT, applyNodeStyle(root));
 
             Object rightChildVertex = drawTree(root.getRight(), depth + 1,
                     index * 2);
@@ -90,6 +92,20 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
                         "startArrow=none;endArrow=none;strokeWidth=1;strokeColor=green");
             }
             return rootVertex;
+        }
+
+        private String applyNodeStyle(Node<T> node) {
+            if (node instanceof RedBlackTree.RbNode) {
+                RedBlackTree.RbNode<T> rbNode = (RedBlackTree.RbNode<T>) node;
+                StringBuilder sb = new StringBuilder("fontColor=white");
+                if (rbNode.getColor() == RedBlackTree.Color.RED) {
+                    sb.append(";fillColor=red");
+                } else {
+                    sb.append(";fillColor=black");
+                }
+                return sb.toString();
+            }
+            return null;
         }
 
         public void update(Node<T> root) {

@@ -26,8 +26,7 @@ import javax.swing.JPanel;
  * description: This file belongs to visual-data-structures
  **/
 public class QueueViewer extends AbstractPanel implements QueueEvent {
-
-    private final Queue<String> queue = new LinkedList<>();
+    private final Queue<Long> queue = new LinkedList<>();
     private QueueView queueView;
 
     public QueueViewer() {
@@ -39,7 +38,7 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
 
     @Override
     public void enqueue() {
-        queue.offer(String.valueOf(receiveInput()));
+        queue.offer(acceptInputInLong());
         queueView.repaint();
     }
 
@@ -69,14 +68,14 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
     }
 
     static class QueueView extends JPanel {
-        java.util.Queue<String> queue;
+        java.util.Queue<Long> queue;
         private static final int BOX_WIDTH = 80;
         private static final int BOX_HEIGHT = 50;
         private static final int LEFT_MARGIN = BOX_HEIGHT + 20;
         private static final int LINE_HEIGHT = 20;
         int x, y;
 
-        public QueueView(Queue<String> queue) {
+        public QueueView(Queue<Long> queue) {
             this.queue = queue;
         }
 
@@ -86,13 +85,14 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
             Graphics2D g2d = (Graphics2D) g;
             x = LEFT_MARGIN;
             y = (getHeight() / 2) - 50;
-            List<String> list = new LinkedList<>(this.queue);
+            List<Long> list = new LinkedList<>(this.queue);
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fill3DRect(x, y, BOX_WIDTH, BOX_HEIGHT, true);
                 g.setColor(Color.BLACK);
-                g.drawString(list.get(i), (x + ((BOX_WIDTH - (list.get(i).length() * 7)) / 2)), (y + (BOX_HEIGHT / 2)) + 5);
+                String item = String.valueOf(list.get(i));
+                g.drawString(item, (x + ((BOX_WIDTH - (item.length() * 7)) / 2)), (y + (BOX_HEIGHT / 2)) + 5);
                 if (i == 0 || i == list.size() - 1) {
                     int x1 = x + (BOX_WIDTH / 2);
                     if (list.size() == 1) {

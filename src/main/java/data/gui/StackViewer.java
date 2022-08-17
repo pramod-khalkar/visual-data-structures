@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  * description: This file belongs to visual-data-structures
  **/
 public class StackViewer extends AbstractPanel implements StackEvent {
-    private final static Stack<String> stack = new Stack<>();
+    private final static Stack<Long> stack = new Stack<>();
     private final StackView stackView;
 
     public StackViewer() {
@@ -51,7 +51,7 @@ public class StackViewer extends AbstractPanel implements StackEvent {
 
     @Override
     public void push() {
-        stack.push((String) receiveInput());
+        stack.push(acceptInputInLong());
         stackView.repaint();
     }
 
@@ -96,14 +96,14 @@ public class StackViewer extends AbstractPanel implements StackEvent {
     }
 
     static class StackView extends JPanel {
-        private final java.util.Stack<String> stack;
+        private final java.util.Stack<Long> stack;
         private static final int BOX_WIDTH = 150;
         private static final int BOX_HEIGHT = 30;
         private static final int BOTTOM_MARGIN = BOX_HEIGHT + 20;
         private static final int LINE_HEIGHT = 20;
         private int x, y;
 
-        public StackView(java.util.Stack<String> stack) {
+        public StackView(java.util.Stack<Long> stack) {
             this.stack = stack;
         }
 
@@ -131,7 +131,8 @@ public class StackViewer extends AbstractPanel implements StackEvent {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fill3DRect(x, y, BOX_WIDTH, BOX_HEIGHT, true);
                 g.setColor(Color.BLACK);
-                g.drawString(stack.get(i), (x + ((BOX_WIDTH - (stack.get(i).length() * 7)) / 2)), (y + (BOX_HEIGHT / 2)) + 5);
+                String item = String.valueOf(stack.get(i));
+                g.drawString(item, (x + ((BOX_WIDTH - (item.length() * 7)) / 2)), (y + (BOX_HEIGHT / 2)) + 5);
                 y -= BOX_HEIGHT + 1;
             }
         }
