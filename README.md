@@ -2,12 +2,17 @@
 
 _Tree operation_
 
-<img width="800" alt="Screenshot 2022-01-22 at 11 16 57 PM" src="https://user-images.githubusercontent.com/5322987/150657221-4e78f9e5-0fa8-4d63-b3e1-d9d7fb261f6a.png">
+<img width="864" alt="Screenshot 2022-08-17 at 10 30 28 AM" src="https://user-images.githubusercontent.com/5322987/185039934-d518e0b7-dfad-4469-aed2-134db269211c.png">
+
+<img width="1003" alt="Screenshot 2022-08-17 at 10 40 33 AM" src="https://user-images.githubusercontent.com/5322987/185039969-011b71a4-ac98-4ff2-b193-a466112de80c.png">
+
 
 _Stack operation_
 
-<img width="802" alt="Screenshot 2022-01-22 at 11 15 35 PM" src="https://user-images.githubusercontent.com/5322987/150657234-b00ef03f-433d-4d4f-a3db-6495ff3f049f.png">
+<img width="1002" alt="Screenshot 2022-08-17 at 10 33 18 AM" src="https://user-images.githubusercontent.com/5322987/185040006-2ad9adf7-dc60-4764-a56b-874ebd0fc765.png">
+
 
 _Queue operation_
 
-<img width="796" alt="Screenshot 2022-01-22 at 11 14 56 PM" src="https://user-images.githubusercontent.com/5322987/150657241-ff5848de-4b07-4827-8d4a-8e3731a88ec6.png">
+<img width="1008" alt="Screenshot 2022-08-17 at 10 39 07 AM" src="https://user-images.githubusercontent.com/5322987/185040032-2184f667-2197-4a61-884c-a57235210b8c.png">
+
