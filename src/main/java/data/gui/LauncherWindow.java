@@ -43,7 +43,6 @@ public class LauncherWindow extends JFrame implements ActionListener {
             setSize(1000, 600);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setLocationRelativeTo(null);
-            setVisible(true);
             crd = new CardLayout();
             cPane = getContentPane();
             cPane.setLayout(crd);
@@ -113,8 +112,8 @@ public class LauncherWindow extends JFrame implements ActionListener {
 
     public void launch() {
         SwingUtilities.invokeLater(() -> {
-            add("stack", stackWindow);
             add("queue", queueWindow);
+            add("stack", stackWindow);
             add("avl", new TreeViewer("AVL Tree", new AvlTree<>()));
             add("bst", new TreeViewer("Binary Search Tree", new BSTree<>()));
             add("gen", new GeneralTreeViewer("General Binary Tree", new GeneralBinaryTree<>()));
@@ -122,6 +121,7 @@ public class LauncherWindow extends JFrame implements ActionListener {
             add("treap", new TreapTreeViewer("Treap", new Treap<>()));
             add("splay", new TreeViewer("Splay Tree", new SplayTree<>()));
             add("rb", new TreeViewer("Red Black Tree", new RedBlackTree<>()));
+            setVisible(true);
         });
     }
 

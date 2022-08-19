@@ -7,6 +7,7 @@ import data.utils.Helper;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Queue;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  * @author : Pramod Khalkar
@@ -63,32 +65,35 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
         public QueueComponentPanel(QueueView queueView, QueueEvent queueEvent) {
             setLayout(new BorderLayout());
             add(new ButtonPanel(queueEvent), NORTH);
-            add(queueView, CENTER);
+            JScrollPane sPane = new JScrollPane(queueView);
+            add(sPane, CENTER);
         }
     }
 
     static class QueueView extends JPanel {
-        java.util.Queue<Long> queue;
+        private java.util.Queue<Long> queue;
         private static final int BOX_WIDTH = 80;
         private static final int BOX_HEIGHT = 50;
-        private static final int LEFT_MARGIN = BOX_HEIGHT + 20;
+        private static final int LEFT_MARGIN = 10;
+        private static final int RIGHT_MARGIN = 10;
         private static final int LINE_HEIGHT = 20;
-        int x, y;
+        private int x, y;
 
         public QueueView(Queue<Long> queue) {
             this.queue = queue;
+            setBackground(Color.WHITE);
         }
 
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             x = LEFT_MARGIN;
             y = (getHeight() / 2) - 50;
             List<Long> list = new LinkedList<>(this.queue);
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                g.setColor(Color.LIGHT_GRAY);
+                g.setColor(Color.decode("#BDDBFF"));
                 g.fill3DRect(x, y, BOX_WIDTH, BOX_HEIGHT, true);
                 g.setColor(Color.BLACK);
                 String item = String.valueOf(list.get(i));
@@ -119,6 +124,12 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
                     }
                 }
                 x += BOX_WIDTH + 1;
+                if (x >= (getWidth() + RIGHT_MARGIN + LEFT_MARGIN)) {
+                    Dimension d = getPreferredSize();
+                    int width = x + RIGHT_MARGIN;
+                    setPreferredSize(new Dimension(width, d.height));
+                    revalidate();
+                }
             }
         }
     }

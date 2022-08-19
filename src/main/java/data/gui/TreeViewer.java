@@ -35,8 +35,12 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
 
     @Override
     public void add() {
-        tree.insert(acceptInputInLong());
-        this.treeComponentPanel.update(tree.getRootNode());
+        try {
+            tree.insert(acceptInputInLong());
+            this.treeComponentPanel.update(tree.getRootNode());
+        } catch (Exception ex) {
+            showErrorMessage(ex.getMessage());
+        }
     }
 
     @Override
@@ -54,8 +58,8 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
     static class TreeComponentPanel<T extends Comparable<T>> extends JPanel {
         static private int CANVAS_WIDTH = 1000;
         private int rootY = 10;
-        private int NODE_SIZE_WIDTH = 55;
-        private int NODE_SIZE_HEIGHT = 25;
+        private int NODE_SIZE_WIDTH = 60;
+        private int NODE_SIZE_HEIGHT = 30;
         private int ROW_HEIGHT = 60;
         mxGraph graph = new mxGraph();
         Object parent = graph.getDefaultParent();
@@ -114,7 +118,6 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
                 Object[] cells = graph.getChildCells(parent, true, false);
                 graph.removeCells(cells, true);
                 drawTree(root, 1, 1);
-
             } finally {
                 graph.getModel().endUpdate();
             }
