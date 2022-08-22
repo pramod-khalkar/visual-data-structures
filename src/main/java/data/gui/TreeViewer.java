@@ -9,6 +9,9 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.javads.tree.Node;
@@ -20,15 +23,16 @@ import org.javads.tree.Tree;
  * @since : 14/08/22, Sun
  * description: This file belongs to visual-data-structures
  **/
-public class TreeViewer extends AbstractPanel implements TreeEvent {
+public class TreeViewer<T extends Comparable<T>> extends AbstractPanel implements TreeEvent {
 
-    protected final Tree<Long> tree;
-    protected final TreeComponentPanel<Long> treeComponentPanel;
+    protected final Tree<NodeData<T>> tree;
+    protected final TreeComponentPanel<T> treeComponentPanel;
 
-    public TreeViewer(String header, Tree<Long> tree) {
+    public TreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header);
         this.tree = tree;
-        this.tree.insert(Helper.randomNumbers(10));
+        T[] numbers = (T[]) Helper.randomNumbers(10);
+        this.tree.insert(Arrays.stream(numbers).map(NodeData::new).toArray(NodeData[]::new));
         treeComponentPanel = new TreeComponentPanel<>(tree.getRootNode(), this);
         add(treeComponentPanel);
     }
@@ -36,7 +40,8 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
     @Override
     public void add() {
         try {
-            tree.insert(acceptInputInLong());
+            T input = (T) acceptInputInLong();
+            tree.insert(new NodeData<>(input, true));
             this.treeComponentPanel.update(tree.getRootNode());
         } catch (Exception ex) {
             showErrorMessage(ex.getMessage());
@@ -45,7 +50,8 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
 
     @Override
     public void remove() {
-        tree.remove(acceptInputInLong());
+        T input = (T) acceptInputInLong();
+        tree.remove(new NodeData<>(input));
         this.treeComponentPanel.update(tree.getRootNode());
     }
 
@@ -64,7 +70,7 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
         mxGraph graph = new mxGraph();
         Object parent = graph.getDefaultParent();
 
-        public TreeComponentPanel(Node<T> root, TreeEvent treeEvent) {
+        public TreeComponentPanel(Node<NodeData<T>> root, TreeEvent treeEvent) {
             setLayout(new BorderLayout());
             add(new ButtonPanel(treeEvent), BorderLayout.NORTH);
             update(root);
@@ -72,7 +78,7 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
             add(graphComponent, CENTER);
         }
 
-        public Object drawTree(Node<T> root, int depth, int index) {
+        public Object drawTree(Node<NodeData<T>> root, int depth, int index) {
             if (root == null) {
                 return null;
             }
@@ -98,21 +104,26 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
             return rootVertex;
         }
 
-        private String applyNodeStyle(Node<T> node) {
+        private String applyNodeStyle(Node<NodeData<T>> node) {
+            NodeStyle style = new NodeStyle();
             if (node instanceof RedBlackTree.RbNode) {
                 RedBlackTree.RbNode<T> rbNode = (RedBlackTree.RbNode<T>) node;
-                StringBuilder sb = new StringBuilder("fontColor=white");
+                style.setFontColor("white");
                 if (rbNode.getColor() == RedBlackTree.Color.RED) {
-                    sb.append(";fillColor=red");
+                    style.setFillColor("red");
                 } else {
-                    sb.append(";fillColor=black");
+                    style.setFillColor("black");
                 }
-                return sb.toString();
             }
-            return null;
+            if (node.getData().isRecent()) {
+                node.getData().setRecent(false);
+                style.setStrokeColor("#00ff00");
+                style.setStrokeWidth(2);
+            }
+            return style.getStyle();
         }
 
-        public void update(Node<T> root) {
+        public void update(Node<NodeData<T>> root) {
             graph.getModel().beginUpdate();
             try {
                 Object[] cells = graph.getChildCells(parent, true, false);
@@ -152,6 +163,65 @@ public class TreeViewer extends AbstractPanel implements TreeEvent {
             } else if (source == removeAll) {
                 treeEvent.removeAllItems();
             }
+        }
+    }
+
+    private static class NodeStyle {
+        private String fontColor;
+        private String fillColor;
+        private String strokeColor;
+        private Integer strokeWidth;
+
+        public String getFontColor() {
+            return fontColor;
+        }
+
+        public void setFontColor(String fontColor) {
+            this.fontColor = fontColor;
+        }
+
+        public String getFillColor() {
+            return fillColor;
+        }
+
+        public void setFillColor(String fillColor) {
+            this.fillColor = fillColor;
+        }
+
+        public String getStrokeColor() {
+            return strokeColor;
+        }
+
+        public void setStrokeColor(String strokeColor) {
+            this.strokeColor = strokeColor;
+        }
+
+        public Integer getStrokeWidth() {
+            return strokeWidth;
+        }
+
+        public void setStrokeWidth(Integer strokeWidth) {
+            this.strokeWidth = strokeWidth;
+        }
+
+        public String getStyle() {
+            List<String> list = new LinkedList<>();
+            if (fontColor != null) {
+                list.add("fontColor=" + this.fontColor);
+            }
+            if (fillColor != null) {
+                list.add("fillColor=" + this.fillColor);
+            }
+            if (strokeColor != null) {
+                list.add("strokeColor=" + this.strokeColor);
+            }
+            if (strokeWidth != null) {
+                list.add("strokeWidth=" + this.strokeWidth);
+            }
+            if (list.size() > 0) {
+                return String.join(";", list);
+            }
+            return null;
         }
     }
 }

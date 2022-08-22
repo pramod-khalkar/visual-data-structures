@@ -10,9 +10,9 @@ import org.javads.tree.Tree;
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class TreapTreeViewer extends TreeViewer {
+public class TreapTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
 
-    public TreapTreeViewer(String header, Tree<Long> tree) {
+    public TreapTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
     }
 
@@ -21,8 +21,9 @@ public class TreapTreeViewer extends TreeViewer {
         Optional<PriorityNodeInput> input = acceptForPriorityNode();
         try {
             if (input.isPresent()) {
-                TreapTree<Long> unBalTree = (TreapTree<Long>) tree;
-                unBalTree.insert(input.get().getValue(), input.get().getPriority());
+                TreapTree<NodeData<T>> unBalTree = (TreapTree<NodeData<T>>) tree;
+                unBalTree.insert(new NodeData<T>((T) input.get().getValue(), true),
+                        input.get().getPriority());
                 treeComponentPanel.update(tree.getRootNode());
             }
         } catch (Exception ex) {

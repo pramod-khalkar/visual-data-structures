@@ -114,13 +114,13 @@ public class LauncherWindow extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             add("queue", queueWindow);
             add("stack", stackWindow);
-            add("avl", new TreeViewer("AVL Tree", new AvlTree<>()));
-            add("bst", new TreeViewer("Binary Search Tree", new BSTree<>()));
-            add("gen", new GeneralTreeViewer("General Binary Tree", new GeneralBinaryTree<>()));
-            add("gen-n-arr", new GeneralNaryTreeViewer("General Nary Tree", new GeneralNaryTree<>()));
-            add("treap", new TreapTreeViewer("Treap", new Treap<>()));
-            add("splay", new TreeViewer("Splay Tree", new SplayTree<>()));
-            add("rb", new TreeViewer("Red Black Tree", new RedBlackTree<>()));
+            add("avl", new TreeViewer<Long>("AVL Tree", new AvlTree<>()));
+            add("bst", new TreeViewer<Long>("Binary Search Tree", new BSTree<>()));
+            add("gen", new GeneralBinaryTreeViewer<Long>("General Binary Tree", new GeneralBinaryTree<>()));
+            add("gen-n-arr", new GeneralNaryTreeViewer<Long>("General Nary Tree", new GeneralNaryTree<>()));
+            add("treap", new TreapTreeViewer<Long>("Treap", new Treap<>()));
+            add("splay", new TreeViewer<Long>("Splay Tree", new SplayTree<>()));
+            add("rb", new TreeViewer<Long>("Red Black Tree", new RedBlackTree<>()));
             setVisible(true);
         });
     }
