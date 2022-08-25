@@ -27,7 +27,7 @@ import javax.swing.JScrollPane;
  * @since : 14/08/22, Sun
  * description: This file belongs to visual-data-structures
  **/
-public class QueueViewer extends AbstractPanel implements QueueEvent {
+public class QueueViewer extends TitlePanel implements QueueEvent {
     private final Queue<Long> queue = new LinkedList<>();
     private QueueView queueView;
 

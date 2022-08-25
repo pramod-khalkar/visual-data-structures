@@ -10,9 +10,9 @@ import org.javads.tree.UnBalanceBinaryTree;
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class GeneralBinaryTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
+public class GenBinaryTreeViewer<T extends Comparable<T>> extends BinaryTreeViewer<T> {
 
-    public GeneralBinaryTreeViewer(String header, Tree<NodeData<T>> tree) {
+    public GenBinaryTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
     }
 
@@ -25,7 +25,7 @@ public class GeneralBinaryTreeViewer<T extends Comparable<T>> extends TreeViewer
                 unBalTree.insert(new NodeData<T>((T) input.get().getValue(), true),
                         new NodeData<T>((T) input.get().getParent()),
                         input.get().getSide());
-                treeComponentPanel.update(tree.getRootNode());
+                treeDrawing.update(tree.getRootNode());
             }
         } catch (Exception ex) {
             showErrorMessage(ex.getMessage());

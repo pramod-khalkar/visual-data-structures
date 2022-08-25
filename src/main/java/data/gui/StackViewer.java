@@ -24,7 +24,7 @@ import javax.swing.JScrollPane;
  * @since : 14/08/22, Sun
  * description: This file belongs to visual-data-structures
  **/
-public class StackViewer extends AbstractPanel implements StackEvent {
+public class StackViewer extends TitlePanel implements StackEvent {
     private final static Stack<Long> stack = new Stack<>();
     private final StackView stackView;
 

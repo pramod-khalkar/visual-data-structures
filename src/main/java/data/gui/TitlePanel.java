@@ -25,9 +25,9 @@ import org.javads.tree.Side;
  * @since : 14/08/22, Sun
  * description: This file belongs to visual-data-structures
  **/
-public abstract class AbstractPanel extends JPanel {
+public abstract class TitlePanel extends JPanel {
 
-    public AbstractPanel(String header) {
+    public TitlePanel(String header) {
         setLayout(new BorderLayout());
         JLabel title = new JLabel(header, SwingConstants.CENTER);
         title.setForeground(getForegroundColor());

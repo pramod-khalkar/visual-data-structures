@@ -10,9 +10,9 @@ import org.javads.tree.UnBalanceNaryTree;
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class GeneralNaryTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
+public class GenNaryTreeViewer<T extends Comparable<T>> extends BinaryTreeViewer<T> {
 
-    public GeneralNaryTreeViewer(String header, Tree<NodeData<T>> tree) {
+    public GenNaryTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
     }
 
@@ -25,10 +25,15 @@ public class GeneralNaryTreeViewer<T extends Comparable<T>> extends TreeViewer<T
                 NodeData<T> element = new NodeData<T>((T) input.get().getValue(), true);
                 NodeData<T> parent = new NodeData<T>((T) input.get().getParent());
                 unBalTree.insert(element, parent);
-                treeComponentPanel.update(tree.getRootNode());
+                treeDrawing.update(tree.getRootNode());
             }
         } catch (Exception ex) {
             showErrorMessage(ex.getMessage());
         }
+    }
+
+    @Override
+    protected TreeDrawing<T> getTreePanel() {
+        return new GenNaryTreeDrawing<>(tree.getRootNode(), this);
     }
 }

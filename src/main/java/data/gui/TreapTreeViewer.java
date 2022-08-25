@@ -10,7 +10,7 @@ import org.javads.tree.Tree;
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class TreapTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
+public class TreapTreeViewer<T extends Comparable<T>> extends BinaryTreeViewer<T> {
 
     public TreapTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
@@ -24,7 +24,7 @@ public class TreapTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
                 TreapTree<NodeData<T>> unBalTree = (TreapTree<NodeData<T>>) tree;
                 unBalTree.insert(new NodeData<T>((T) input.get().getValue(), true),
                         input.get().getPriority());
-                treeComponentPanel.update(tree.getRootNode());
+                treeDrawing.update(tree.getRootNode());
             }
         } catch (Exception ex) {
             showErrorMessage(ex.getMessage());
