@@ -22,28 +22,32 @@ public class GenNaryTreeDrawing<T extends Comparable<T>> extends BinaryTreeDrawi
             int myX = (int) ((CANVAS_WIDTH * (index)) / (Math.pow(2, depth - 1) + 1));
             Object rootVertex = graph.insertVertex(parent, null, root.toString(),
                     myX, depth * ROW_HEIGHT + rootY, NODE_SIZE_WIDTH, NODE_SIZE_HEIGHT, applyNodeStyle(root));
-            drawNTree(root, rootVertex, depth, index);
+            List<Node<NodeData<T>>> children = getChildren(root);
+            drawNTree(root, rootVertex, depth, children.size(), 10);
             return rootVertex;
         }
         return null;
     }
 
-    private void drawNTree(Node<NodeData<T>> root, Object childParent, int depth, int index) {
+    private void drawNTree(Node<NodeData<T>> root, Object childParent, int depth, int index, int myX) {
         if (root == null) {
             return;
         }
-        int myX;
         depth += 1;
         List<Node<NodeData<T>>> children = getChildren(root);
+        int grandChildCount = children.stream().map(n -> getChildren(n).size()).mapToInt(Integer::intValue).sum();
+        index = Math.abs(index - children.size());
+        int slice = children.size() > 0 ? CANVAS_WIDTH / (children.size() + index) : 0;
         for (int i = 0; i < children.size(); i++) {
-            myX = (int) ((CANVAS_WIDTH * (index * 3)) / (Math.pow(2, depth) + i));
-//            myX = (int) ((CANVAS_WIDTH * (index * 2 + 1)) / (Math.pow(2, depth - 1) + i));
+            int prevGrandChildCount =
+                    children.subList(0, i != 0 ? i - 1 : 0).stream().map(n -> getChildren(n).size()).mapToInt(Integer::intValue).sum();
             Object child = graph.insertVertex(parent, null, children.get(i).toString(),
                     myX, depth * ROW_HEIGHT + rootY, NODE_SIZE_WIDTH, NODE_SIZE_HEIGHT, applyNodeStyle(children.get(i)));
+            myX += slice;
             if (child != null) {
                 graph.insertEdge(parent, null, "", childParent, child, EDGE_STYLE);
             }
-            drawNTree(children.get(i), child, depth + 1, index * 2);
+            drawNTree(children.get(i), child, depth + 1, grandChildCount, prevGrandChildCount * NODE_SIZE_WIDTH);
         }
     }
 
