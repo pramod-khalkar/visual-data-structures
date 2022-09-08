@@ -8,7 +8,7 @@ package data.gui;
 public interface StackEvent {
     void clear();
 
-    void pop();
+    Long pop();
 
-    void push();
+    void push(Long item);
 }

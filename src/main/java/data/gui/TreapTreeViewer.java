@@ -2,23 +2,23 @@ package data.gui;
 
 import data.utils.PriorityNodeInput;
 import java.util.Optional;
-import org.javads.tree.TreapTree;
-import org.javads.tree.Tree;
+import org.javads.nlinear.tree.TreapTree;
+import org.javads.nlinear.tree.Tree;
 
 /**
  * @author : Pramod Khalkar
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class TreapTreeViewer<T extends Comparable<T>> extends BinaryTreeViewer<T> {
+public class TreapTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
 
     public TreapTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
     }
 
     @Override
-    public void add() {
-        Optional<PriorityNodeInput> input = acceptForPriorityNode();
+    public void add(Long item) {
+        Optional<PriorityNodeInput> input = acceptForPriorityNode(String.valueOf(item));
         try {
             if (input.isPresent()) {
                 TreapTree<NodeData<T>> unBalTree = (TreapTree<NodeData<T>>) tree;

@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
-import org.javads.tree.Side;
+import org.javads.nlinear.tree.BiSide;
 
 /**
  * @author : Pramod Khalkar
@@ -57,12 +57,12 @@ public abstract class TitlePanel extends JPanel {
         return Long.parseLong(input);
     }
 
-    public Optional<UnBalNodeInput> acceptForUnBalNode() {
-        return acceptForUnBalNode(true);
+    public Optional<UnBalNodeInput> acceptForUnBalNode(String item) {
+        return acceptForUnBalNode(item, true);
     }
 
-    public Optional<PriorityNodeInput> acceptForPriorityNode() {
-        JTextField value = new JTextField();
+    public Optional<PriorityNodeInput> acceptForPriorityNode(String item) {
+        JTextField value = new JTextField(item != null ? item : "");
         JTextField priority = new JTextField();
         final JComponent[] components = new JComponent[] {
                 new JLabel("Node value"),
@@ -80,8 +80,8 @@ public abstract class TitlePanel extends JPanel {
         return Optional.empty();
     }
 
-    public Optional<UnBalNodeInput> acceptForUnBalNode(boolean isSideNeeded) {
-        JTextField value = new JTextField();
+    public Optional<UnBalNodeInput> acceptForUnBalNode(String item, boolean isSideNeeded) {
+        JTextField value = new JTextField(item != null ? item : "");
         JTextField parent = new JTextField();
         JComboBox<String> side = new JComboBox<>(new String[] {"Left", "Right"});
         final List<JComponent> components = new ArrayList<>();
@@ -99,9 +99,9 @@ public abstract class TitlePanel extends JPanel {
             unBal.setValue(Long.valueOf(value.getText()));
             if (isSideNeeded) {
                 if (side.getSelectedItem() == "Left") {
-                    unBal.setSide(Side.LEFT);
+                    unBal.setSide(BiSide.LEFT);
                 } else {
-                    unBal.setSide(Side.RIGHT);
+                    unBal.setSide(BiSide.RIGHT);
                 }
             }
             unBal.setParent(Long.valueOf(parent.getText()));

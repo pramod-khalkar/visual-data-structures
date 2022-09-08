@@ -6,9 +6,9 @@ package data.gui;
  * description: This file belongs to visual-data-structures
  **/
 public interface QueueEvent {
-    void enqueue();
+    void enqueue(Long item);
 
-    void dequeue();
+    Long dequeue();
 
     void clear();
 }

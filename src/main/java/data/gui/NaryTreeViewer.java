@@ -2,23 +2,28 @@ package data.gui;
 
 import data.utils.UnBalNodeInput;
 import java.util.Optional;
-import org.javads.tree.Tree;
-import org.javads.tree.UnBalanceNaryTree;
+import org.javads.nlinear.tree.Tree;
+import org.javads.nlinear.tree.UnBalanceNaryTree;
 
 /**
  * @author : Pramod Khalkar
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class GenNaryTreeViewer<T extends Comparable<T>> extends BinaryTreeViewer<T> {
+public class NaryTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
 
-    public GenNaryTreeViewer(String header, Tree<NodeData<T>> tree) {
+    public NaryTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
     }
 
     @Override
-    public void add() {
-        Optional<UnBalNodeInput> input = acceptForUnBalNode(false);
+    protected TreeDrawing getTreeDrawer() {
+        return new NaryTreeDrawing<>(tree.getRootNode(), this);
+    }
+
+    @Override
+    public void add(Long item) {
+        Optional<UnBalNodeInput> input = acceptForUnBalNode(String.valueOf(item), false);
         try {
             if (input.isPresent()) {
                 UnBalanceNaryTree<NodeData<T>> unBalTree = (UnBalanceNaryTree<NodeData<T>>) tree;
@@ -30,10 +35,5 @@ public class GenNaryTreeViewer<T extends Comparable<T>> extends BinaryTreeViewer
         } catch (Exception ex) {
             showErrorMessage(ex.getMessage());
         }
-    }
-
-    @Override
-    protected TreeDrawing<T> getTreePanel() {
-        return new GenNaryTreeDrawing<>(tree.getRootNode(), this);
     }
 }

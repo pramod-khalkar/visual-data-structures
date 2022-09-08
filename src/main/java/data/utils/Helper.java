@@ -1,11 +1,15 @@
 package data.utils;
 
+import static java.util.Optional.empty;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
+import javax.swing.JTextField;
 
 /**
  * Date: 31/12/21
@@ -48,5 +52,19 @@ public final class Helper {
             //failed silently
         }
         return null;
+    }
+
+    public static boolean isValidInput(String text) {
+        if (text != null && !text.equals("") && isNumeric(text)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static Optional<Long> checkAndGetValidInput(JTextField inputField) {
+        if (isValidInput(inputField.getText())) {
+            return Optional.of(Long.parseLong(inputField.getText().trim()));
+        }
+        return empty();
     }
 }

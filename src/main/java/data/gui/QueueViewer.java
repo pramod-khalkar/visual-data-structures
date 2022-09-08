@@ -8,7 +8,6 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -17,10 +16,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  * @author : Pramod Khalkar
@@ -39,17 +42,19 @@ public class QueueViewer extends TitlePanel implements QueueEvent {
     }
 
     @Override
-    public void enqueue() {
-        queue.offer(acceptInputInLong());
+    public void enqueue(Long item) {
+        queue.offer(item);
         queueView.repaint();
     }
 
     @Override
-    public void dequeue() {
+    public Long dequeue() {
+        Long item = null;
         if (!queue.isEmpty()) {
-            queue.poll();
+            item = queue.poll();
             queueView.repaint();
         }
+        return item;
     }
 
     @Override
@@ -60,13 +65,46 @@ public class QueueViewer extends TitlePanel implements QueueEvent {
         }
     }
 
-    static class QueueComponentPanel extends JPanel {
+    static class QueueComponentPanel extends JPanel implements ActionListener {
+        private final JButton enqueue, dequeue, clear;
+        private final QueueEvent queueEvent;
+        private final JTextField inputField;
 
         public QueueComponentPanel(QueueView queueView, QueueEvent queueEvent) {
+            this.queueEvent = queueEvent;
+            enqueue = new JButton("Enqueue");
+            enqueue.addActionListener(this);
+            dequeue = new JButton("Dequeue");
+            dequeue.addActionListener(this);
+            clear = new JButton("Clear");
+            clear.addActionListener(this);
+            inputField = new JTextField();
+            inputField.setToolTipText("Number allowed only");
+            Box hBox = Box.createHorizontalBox();
+            hBox.add(new JLabel("   Input:  "));
+            hBox.add(inputField);
+            hBox.add(enqueue);
+            hBox.add(dequeue);
+            hBox.add(clear);
             setLayout(new BorderLayout());
-            add(new ButtonPanel(queueEvent), NORTH);
+            add(hBox, NORTH);
             JScrollPane sPane = new JScrollPane(queueView);
             add(sPane, CENTER);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if (source == dequeue) {
+                queueEvent.dequeue();
+            } else if (source == enqueue) {
+                Optional<Long> value = Helper.checkAndGetValidInput(inputField);
+                value.ifPresent(queueEvent::enqueue);
+                inputField.setText("");
+                inputField.setFocusable(true);
+            } else if (source == clear) {
+                queueEvent.clear();
+            }
         }
     }
 
@@ -130,37 +168,6 @@ public class QueueViewer extends TitlePanel implements QueueEvent {
                     setPreferredSize(new Dimension(width, d.height));
                     revalidate();
                 }
-            }
-        }
-    }
-
-    static class ButtonPanel extends JPanel implements ActionListener {
-        private final JButton enqueue, dequeue, clear;
-        private final QueueEvent queueEvent;
-
-        public ButtonPanel(QueueEvent queueEvent) {
-            this.queueEvent = queueEvent;
-            setLayout(new FlowLayout());
-            enqueue = new JButton("Enqueue");
-            enqueue.addActionListener(this);
-            add(enqueue);
-            dequeue = new JButton("Dequeue");
-            dequeue.addActionListener(this);
-            add(dequeue);
-            clear = new JButton("Clear");
-            clear.addActionListener(this);
-            add(clear);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
-            if (source == dequeue) {
-                queueEvent.dequeue();
-            } else if (source == enqueue) {
-                queueEvent.enqueue();
-            } else if (source == clear) {
-                queueEvent.clear();
             }
         }
     }

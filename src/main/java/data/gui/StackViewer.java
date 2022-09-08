@@ -8,16 +8,19 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Stack;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  * @author : Pramod Khalkar
@@ -44,35 +47,46 @@ public class StackViewer extends TitlePanel implements StackEvent {
     }
 
     @Override
-    public void pop() {
+    public Long pop() {
+        Long item = null;
         if (!stack.isEmpty()) {
-            stack.pop();
+            item = stack.pop();
             stackView.repaint();
         }
+        return item;
     }
 
     @Override
-    public void push() {
-        stack.push(acceptInputInLong());
+    public void push(Long item) {
+        stack.push(item);
         stackView.repaint();
     }
 
-    static class ButtonPanel extends JPanel implements ActionListener {
+    static class StackComponentPanel extends JPanel implements ActionListener {
         private final JButton push, pop, clear;
-        private StackEvent stackEvent;
+        private final JTextField inputField;
+        private final StackEvent stackEvent;
 
-        public ButtonPanel(StackEvent stackEvent) {
+        public StackComponentPanel(StackView stackView, StackEvent stackEvent) {
             this.stackEvent = stackEvent;
-            setLayout(new FlowLayout());
             push = new JButton("Push");
             push.addActionListener(this);
-            add(push);
             pop = new JButton("Pop");
             pop.addActionListener(this);
-            add(pop);
             clear = new JButton("Clear");
             clear.addActionListener(this);
-            add(clear);
+            inputField = new JTextField();
+            inputField.setToolTipText("Number allowed only");
+            setLayout(new BorderLayout());
+            Box hBox = Box.createHorizontalBox();
+            hBox.add(new JLabel("   Input:  "));
+            hBox.add(inputField);
+            hBox.add(push);
+            hBox.add(pop);
+            hBox.add(clear);
+            add(hBox, NORTH);
+            JScrollPane sPane = new JScrollPane(stackView);
+            add(sPane, CENTER);
         }
 
         @Override
@@ -81,20 +95,13 @@ public class StackViewer extends TitlePanel implements StackEvent {
             if (source == pop) {
                 stackEvent.pop();
             } else if (source == push) {
-                stackEvent.push();
+                Optional<Long> value = Helper.checkAndGetValidInput(inputField);
+                value.ifPresent(stackEvent::push);
+                inputField.setText("");
+                inputField.setFocusable(true);
             } else if (source == clear) {
                 stackEvent.clear();
             }
-        }
-    }
-
-    static class StackComponentPanel extends JPanel {
-
-        public StackComponentPanel(StackView stackView, StackEvent stackEvent) {
-            setLayout(new BorderLayout());
-            add(new ButtonPanel(stackEvent), NORTH);
-            JScrollPane sPane = new JScrollPane(stackView);
-            add(sPane, CENTER);
         }
     }
 
