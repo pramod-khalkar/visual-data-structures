@@ -1,29 +1,30 @@
 package data.gui;
 
-import data.utils.PriorityNodeInput;
+import data.utils.UnBalNodeInput;
 import java.util.Optional;
-import org.javads.nlinear.tree.TreapTree;
 import org.javads.nlinear.tree.Tree;
+import org.javads.nlinear.tree.UnBalanceBiTree;
 
 /**
  * @author : Pramod Khalkar
  * @since : 16/08/22, Tue
  * description: This file belongs to visual-data-structures
  **/
-public class TreapTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
+public class BinaryTreeViewer<T extends Comparable<T>> extends TreeViewer<T> {
 
-    public TreapTreeViewer(String header, Tree<NodeData<T>> tree) {
+    public BinaryTreeViewer(String header, Tree<NodeData<T>> tree) {
         super(header, tree);
     }
 
     @Override
     public void add(Long item) {
-        Optional<PriorityNodeInput> input = acceptForPriorityNode(String.valueOf(item));
+        Optional<UnBalNodeInput> input = acceptForUnBalNode(String.valueOf(item));
         try {
             if (input.isPresent()) {
-                TreapTree<NodeData<T>> unBalTree = (TreapTree<NodeData<T>>) tree;
+                UnBalanceBiTree<NodeData<T>> unBalTree = (UnBalanceBiTree<NodeData<T>>) tree;
                 unBalTree.insert(new NodeData<T>((T) input.get().getValue(), true),
-                        input.get().getPriority());
+                        new NodeData<T>((T) input.get().getParent()),
+                        input.get().getSide());
                 treeDrawing.update(tree.getRootNode());
             }
         } catch (Exception ex) {

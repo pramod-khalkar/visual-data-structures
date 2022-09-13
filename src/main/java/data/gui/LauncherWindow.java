@@ -12,13 +12,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import org.javads.tree.AvlTree;
-import org.javads.tree.BSTree;
-import org.javads.tree.GeneralBinaryTree;
-import org.javads.tree.GeneralNaryTree;
-import org.javads.tree.RedBlackTree;
-import org.javads.tree.SplayTree;
-import org.javads.tree.Treap;
+import org.javads.nlinear.tree.AvlTree;
+import org.javads.nlinear.tree.BTree;
+import org.javads.nlinear.tree.BinarySearchTree;
+import org.javads.nlinear.tree.GeneralBinaryTree;
+import org.javads.nlinear.tree.GeneralNaryTree;
+import org.javads.nlinear.tree.RedBlackTree;
+import org.javads.nlinear.tree.SplayTree;
+import org.javads.nlinear.tree.Treap;
 
 /**
  * @author : Pramod Khalkar
@@ -29,7 +30,7 @@ public class LauncherWindow extends JFrame implements ActionListener {
 
     private JMenu dataStruct, treeMenu, graphMenu;
     private JMenuItem avlTreeMItem, bsTreeMItem, genTreeMItem, stackMItem, queueMItem,
-            genNTreeMItem, redTreeMItem, splayTreeMItem, treapMItem;
+            genNTreeMItem, redTreeMItem, splayTreeMItem, treapMItem, btMItem;
     private JMenuBar mb;
     private CardLayout crd;
     private Container cPane;
@@ -43,7 +44,6 @@ public class LauncherWindow extends JFrame implements ActionListener {
             setSize(1000, 600);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setLocationRelativeTo(null);
-            setVisible(true);
             crd = new CardLayout();
             cPane = getContentPane();
             cPane.setLayout(crd);
@@ -102,6 +102,11 @@ public class LauncherWindow extends JFrame implements ActionListener {
         splayTreeMItem.addActionListener(this);
         treeMenu.add(splayTreeMItem);
 
+        btMItem = new JMenuItem("B-Tree");
+        btMItem.setIcon(new ImageIcon(Helper.loadImageIcon("images/circle.png")));
+        btMItem.addActionListener(this);
+        treeMenu.add(btMItem);
+
         graphMenu = new JMenu("Graph");
         graphMenu.setIcon(new ImageIcon(Helper.loadImageIcon("images/graph.png")));
         dataStruct.add(graphMenu);
@@ -113,15 +118,17 @@ public class LauncherWindow extends JFrame implements ActionListener {
 
     public void launch() {
         SwingUtilities.invokeLater(() -> {
-            add("stack", stackWindow);
             add("queue", queueWindow);
-            add("avl", new TreeViewer("AVL Tree", new AvlTree<>()));
-            add("bst", new TreeViewer("Binary Search Tree", new BSTree<>()));
-            add("gen", new GeneralTreeViewer("General Binary Tree", new GeneralBinaryTree<>()));
-            add("gen-n-arr", new GeneralNaryTreeViewer("General Nary Tree", new GeneralNaryTree<>()));
-            add("treap", new TreapTreeViewer("Treap", new Treap<>()));
-            add("splay", new TreeViewer("Splay Tree", new SplayTree<>()));
-            add("rb", new TreeViewer("Red Black Tree", new RedBlackTree<>()));
+            add("stack", stackWindow);
+            add("avl", new TreeViewer<Long>("AVL Tree", new AvlTree<>()));
+            add("bst", new TreeViewer<Long>("Binary Search Tree", new BinarySearchTree<>()));
+            add("gen", new BinaryTreeViewer<Long>("General Binary Tree", new GeneralBinaryTree<>()));
+            add("gen-n-arr", new NaryTreeViewer<Long>("General Nary Tree", new GeneralNaryTree<>()));
+            add("treap", new TreapTreeViewer<Long>("Treap", new Treap<>()));
+            add("splay", new TreeViewer<Long>("Splay Tree", new SplayTree<>()));
+            add("rb", new TreeViewer<Long>("Red Black Tree", new RedBlackTree<>()));
+            add("bt", new BTreeViewer<Long>("B-Tree (OF DEGREE 2)", new BTree<>()));
+            setVisible(true);
         });
     }
 
@@ -146,6 +153,8 @@ public class LauncherWindow extends JFrame implements ActionListener {
             crd.show(cPane, "gen-n-arr");
         } else if (source == treapMItem) {
             crd.show(cPane, "treap");
+        } else if (source == btMItem) {
+            crd.show(cPane, "bt");
         }
     }
 }

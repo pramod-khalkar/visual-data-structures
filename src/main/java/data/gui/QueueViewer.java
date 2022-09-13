@@ -7,7 +7,7 @@ import data.utils.Helper;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -16,16 +16,21 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Queue;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  * @author : Pramod Khalkar
  * @since : 14/08/22, Sun
  * description: This file belongs to visual-data-structures
  **/
-public class QueueViewer extends AbstractPanel implements QueueEvent {
+public class QueueViewer extends TitlePanel implements QueueEvent {
     private final Queue<Long> queue = new LinkedList<>();
     private QueueView queueView;
 
@@ -37,17 +42,19 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
     }
 
     @Override
-    public void enqueue() {
-        queue.offer(acceptInputInLong());
+    public void enqueue(Long item) {
+        queue.offer(item);
         queueView.repaint();
     }
 
     @Override
-    public void dequeue() {
+    public Long dequeue() {
+        Long item = null;
         if (!queue.isEmpty()) {
-            queue.poll();
+            item = queue.poll();
             queueView.repaint();
         }
+        return item;
     }
 
     @Override
@@ -58,37 +65,73 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
         }
     }
 
-    static class QueueComponentPanel extends JPanel {
+    static class QueueComponentPanel extends JPanel implements ActionListener {
+        private final JButton enqueue, dequeue, clear;
+        private final QueueEvent queueEvent;
+        private final JTextField inputField;
 
         public QueueComponentPanel(QueueView queueView, QueueEvent queueEvent) {
+            this.queueEvent = queueEvent;
+            enqueue = new JButton("Enqueue");
+            enqueue.addActionListener(this);
+            dequeue = new JButton("Dequeue");
+            dequeue.addActionListener(this);
+            clear = new JButton("Clear");
+            clear.addActionListener(this);
+            inputField = new JTextField();
+            inputField.setToolTipText("Number allowed only");
+            Box hBox = Box.createHorizontalBox();
+            hBox.add(new JLabel("   Input:  "));
+            hBox.add(inputField);
+            hBox.add(enqueue);
+            hBox.add(dequeue);
+            hBox.add(clear);
             setLayout(new BorderLayout());
-            add(new ButtonPanel(queueEvent), NORTH);
-            add(queueView, CENTER);
+            add(hBox, NORTH);
+            JScrollPane sPane = new JScrollPane(queueView);
+            add(sPane, CENTER);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if (source == dequeue) {
+                queueEvent.dequeue();
+            } else if (source == enqueue) {
+                Optional<Long> value = Helper.checkAndGetValidInput(inputField);
+                value.ifPresent(queueEvent::enqueue);
+                inputField.setText("");
+                inputField.setFocusable(true);
+            } else if (source == clear) {
+                queueEvent.clear();
+            }
         }
     }
 
     static class QueueView extends JPanel {
-        java.util.Queue<Long> queue;
+        private java.util.Queue<Long> queue;
         private static final int BOX_WIDTH = 80;
         private static final int BOX_HEIGHT = 50;
-        private static final int LEFT_MARGIN = BOX_HEIGHT + 20;
+        private static final int LEFT_MARGIN = 10;
+        private static final int RIGHT_MARGIN = 10;
         private static final int LINE_HEIGHT = 20;
-        int x, y;
+        private int x, y;
 
         public QueueView(Queue<Long> queue) {
             this.queue = queue;
+            setBackground(Color.WHITE);
         }
 
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
             x = LEFT_MARGIN;
             y = (getHeight() / 2) - 50;
             List<Long> list = new LinkedList<>(this.queue);
             Collections.reverse(list);
             for (int i = 0; i < list.size(); i++) {
-                g.setColor(Color.LIGHT_GRAY);
+                g.setColor(Color.decode("#BDDBFF"));
                 g.fill3DRect(x, y, BOX_WIDTH, BOX_HEIGHT, true);
                 g.setColor(Color.BLACK);
                 String item = String.valueOf(list.get(i));
@@ -119,37 +162,12 @@ public class QueueViewer extends AbstractPanel implements QueueEvent {
                     }
                 }
                 x += BOX_WIDTH + 1;
-            }
-        }
-    }
-
-    static class ButtonPanel extends JPanel implements ActionListener {
-        private final JButton enqueue, dequeue, clear;
-        private final QueueEvent queueEvent;
-
-        public ButtonPanel(QueueEvent queueEvent) {
-            this.queueEvent = queueEvent;
-            setLayout(new FlowLayout());
-            enqueue = new JButton("Enqueue");
-            enqueue.addActionListener(this);
-            add(enqueue);
-            dequeue = new JButton("Dequeue");
-            dequeue.addActionListener(this);
-            add(dequeue);
-            clear = new JButton("Clear");
-            clear.addActionListener(this);
-            add(clear);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
-            if (source == dequeue) {
-                queueEvent.dequeue();
-            } else if (source == enqueue) {
-                queueEvent.enqueue();
-            } else if (source == clear) {
-                queueEvent.clear();
+                if (x >= (getWidth() + RIGHT_MARGIN + LEFT_MARGIN)) {
+                    Dimension d = getPreferredSize();
+                    int width = x + RIGHT_MARGIN;
+                    setPreferredSize(new Dimension(width, d.height));
+                    revalidate();
+                }
             }
         }
     }

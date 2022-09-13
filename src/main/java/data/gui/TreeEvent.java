@@ -6,9 +6,9 @@ package data.gui;
  * description: This file belongs to visual-data-structures
  **/
 public interface TreeEvent {
-    void add();
+    void add(Long item);
 
-    void remove();
+    void remove(Long item);
 
     void removeAllItems();
 }
