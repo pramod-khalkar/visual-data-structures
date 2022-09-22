@@ -150,7 +150,8 @@ public class LauncherWindow extends JFrame implements ActionListener {
         } else if (source == splayTreeMItem) {
             crd.show(cPane, "splay");
         } else if (source == genNTreeMItem) {
-            crd.show(cPane, "gen-n-arr");
+            // TODO: 22/09/22 Need to improve
+//            crd.show(cPane, "gen-n-arr");
         } else if (source == treapMItem) {
             crd.show(cPane, "treap");
         } else if (source == btMItem) {
